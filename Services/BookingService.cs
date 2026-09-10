@@ -1,19 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Net.Http.Json;
-using Microsoft.AspNetCore.WebUtilities;
+﻿using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Caching.Memory;
 using Stayora.Dtos.Booking;
 using Stayora.Models;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Net.Http.Json;
 
 namespace Stayora.Services
 {
     public class BookingService : IBookingService
     {
         private readonly HttpClient _httpClient;
+        private readonly IMemoryCache _cache;
 
-        public BookingService(HttpClient httpClient)
+        public BookingService(HttpClient httpClient, IMemoryCache cache)
         {
             _httpClient = httpClient;
+            _cache = cache;
         }
 
         public async Task<HotelDetailsDto> GetHotelDetailsAsync(long hotelId, HotelSearchRequest request, CancellationToken cancellationToken = default)
@@ -71,7 +74,25 @@ namespace Stayora.Services
                 "query",
                 city.Trim());
 
-            return await GetDataAsync<List<DestinationDto>>(url, cancellationToken);
+            var cacheKey = $"booking:destinations:{url}";
+
+            if (_cache.TryGetValue(
+                    cacheKey,
+                    out List<DestinationDto>? cachedDestinations)
+                && cachedDestinations is not null)
+            {
+                return cachedDestinations;
+            }
+
+            var destinations = await GetDataAsync<List<DestinationDto>>(
+                url, cancellationToken);
+
+            _cache.Set(
+                cacheKey,
+                destinations,
+                TimeSpan.FromHours(1));
+
+            return destinations;
         }
 
         public async Task<HotelSearchDataDto> SearchHotelsAsync(DestinationDto destination, HotelSearchRequest request, CancellationToken cancellationToken = default)
@@ -127,13 +148,31 @@ namespace Stayora.Services
                 "api/v1/hotels/searchHotels",
                 parameters);
 
-            var result = await GetDataAsync<HotelSearchDataDto>(url, cancellationToken);
-            result.Hotels = result.Hotels
-                .Skip(skipCount)
-                .Take(displayPageSize)
-                .ToList();
+            var cacheKey = $"booking:hotels:{url}";
 
-            return result;
+            if (!_cache.TryGetValue(
+                    cacheKey,
+                    out HotelSearchDataDto? apiResult)
+                || apiResult is null)
+            {
+                apiResult = await GetDataAsync<HotelSearchDataDto>(
+                    url, cancellationToken);
+
+                _cache.Set(
+                    cacheKey,
+                    apiResult,
+                    TimeSpan.FromMinutes(2));
+            }
+
+            return new HotelSearchDataDto
+            {
+                Hotels = apiResult.Hotels
+                    .Skip(skipCount)
+                    .Take(displayPageSize)
+                    .ToList(),
+
+                Meta = apiResult.Meta
+            };
         }
 
         private async Task<T> GetDataAsync<T>(string url, CancellationToken cancellationToken) where T : class

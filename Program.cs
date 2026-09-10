@@ -31,7 +31,7 @@ builder.Services.AddHttpClient<IBookingService, BookingService>(
             "x-rapidapi-host",
             "booking-com15.p.rapidapi.com");
     });
-
+builder.Services.AddMemoryCache();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
