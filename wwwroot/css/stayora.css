@@ -69,3 +69,197 @@
         outline: 2px solid #8a5726;
         outline-offset: 4px;
     }
+
+.stayora-chat-toggle {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 22px;
+    border: 0;
+    border-radius: 30px;
+    background: #19191a;
+    color: #fff;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, .18);
+    cursor: pointer;
+}
+
+.stayora-chat-panel {
+    position: fixed;
+    right: 24px;
+    bottom: 92px;
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    width: 390px;
+    height: min(620px, calc(100dvh - 115px));
+    overflow: hidden;
+    border: 1px solid #e8e8e8;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, .18);
+}
+
+    .stayora-chat-panel[hidden] {
+        display: none;
+    }
+
+.stayora-chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px;
+    background: #19191a;
+    color: #fff;
+}
+
+    .stayora-chat-header small {
+        display: block;
+        margin-top: 4px;
+        color: #ddd;
+    }
+
+    .stayora-chat-header button {
+        padding: 7px;
+        border: 0;
+        background: transparent;
+        color: #fff;
+        cursor: pointer;
+    }
+
+.stayora-chat-messages {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 16px;
+    background: #faf9f7;
+}
+
+.stayora-chat-message {
+    max-width: 94%;
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #fff;
+    color: #333;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+    .stayora-chat-message.is-user {
+        margin-left: auto;
+        background: #f3e5d5;
+    }
+
+.stayora-chat-status {
+    margin: 0;
+    padding: 8px 14px;
+    color: #6b4d2f;
+    font-size: 12px;
+}
+
+    .stayora-chat-status:empty {
+        display: none;
+    }
+
+.stayora-chat-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 12px;
+    border-top: 1px solid #eee;
+}
+
+    .stayora-chat-form textarea {
+        flex: 1;
+        min-width: 0;
+        max-height: 120px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        resize: vertical;
+        font-size: 16px;
+    }
+
+    .stayora-chat-form button {
+        width: 44px;
+        height: 44px;
+        border: 0;
+        border-radius: 8px;
+        background: #8a5726;
+        color: #fff;
+        cursor: pointer;
+    }
+
+        .stayora-chat-form button:disabled,
+        .stayora-chat-header button:disabled {
+            opacity: .5;
+            cursor: wait;
+        }
+
+.stayora-chat-hotel {
+    overflow: hidden;
+    margin-bottom: 14px;
+    border: 1px solid #e5e0da;
+    border-radius: 10px;
+    background: #fff;
+}
+
+    .stayora-chat-hotel img {
+        display: block;
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+    }
+
+.stayora-chat-hotel-body {
+    padding: 14px;
+}
+
+.stayora-chat-hotel h4 {
+    margin-bottom: 8px;
+    font-size: 18px;
+}
+
+.stayora-chat-hotel p {
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+.stayora-chat-hotel a {
+    display: block;
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 6px;
+    background: #19191a;
+    color: #fff;
+    text-align: center;
+}
+
+#stayora-chat button:focus-visible,
+#stayora-chat a:focus-visible,
+#stayora-chat textarea:focus-visible {
+    outline: 2px solid #dfa974;
+    outline-offset: 3px;
+}
+
+@media (max-width: 575px) {
+    .stayora-chat-toggle {
+        right: 12px;
+        bottom: 16px;
+    }
+
+    .stayora-chat-panel {
+        right: 12px;
+        bottom: 82px;
+        width: calc(100vw - 24px);
+        height: min(590px, calc(100dvh - 100px));
+    }
+}

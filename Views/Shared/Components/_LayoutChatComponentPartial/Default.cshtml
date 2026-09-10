@@ -1,0 +1,72 @@
+﻿<div id="stayora-chat"
+     data-bootstrap-url="@Url.Action("Bootstrap", "Chat")"
+     data-send-url="@Url.Action("Send", "Chat")"
+     data-new-url="@Url.Action("New", "Chat")">
+
+    <button type="button"
+            id="stayora-chat-toggle"
+            class="stayora-chat-toggle"
+            aria-label="Stayora AI sohbetini aç"
+            aria-controls="stayora-chat-panel"
+            aria-expanded="false">
+        <i class="fa fa-comments" aria-hidden="true"></i>
+        <span>Stayora AI</span>
+    </button>
+
+    <section id="stayora-chat-panel"
+             class="stayora-chat-panel"
+             aria-labelledby="stayora-chat-title"
+             hidden>
+
+        <header class="stayora-chat-header">
+            <div>
+                <strong id="stayora-chat-title">Stayora AI</strong>
+                <small>Seyahatini birlikte planlayalım</small>
+            </div>
+
+            <div>
+                <button type="button"
+                        id="stayora-chat-new"
+                        aria-label="Yeni sohbet başlat"
+                        title="Yeni sohbet">
+                    <i class="fa fa-refresh" aria-hidden="true"></i>
+                </button>
+
+                <button type="button"
+                        id="stayora-chat-close"
+                        aria-label="Sohbeti kapat">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+        </header>
+
+        <div id="stayora-chat-messages"
+             class="stayora-chat-messages"
+             role="log"
+             aria-label="Sohbet mesajları"
+             aria-live="polite"
+             aria-relevant="additions"></div>
+
+        <p id="stayora-chat-status"
+           class="stayora-chat-status"
+           role="status"></p>
+
+        <form id="stayora-chat-form" class="stayora-chat-form">
+            <label for="stayora-chat-input" class="sr-only">
+                Mesajınız
+            </label>
+
+            <textarea id="stayora-chat-input"
+                      rows="2"
+                      maxlength="2000"
+                      placeholder="Nereye, hangi tarihlerde gitmek istersin?"
+                      required></textarea>
+
+            <button type="submit"
+                    id="stayora-chat-send"
+                    aria-label="Mesajı gönder">
+                <i class="fa fa-paper-plane" aria-hidden="true"></i>
+            </button>
+        </form>
+    </section>
+</div>

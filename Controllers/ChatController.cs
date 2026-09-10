@@ -1,9 +1,10 @@
-﻿using System.Net;
-using System.Text.Json;
+﻿using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Stayora.Models.Chat;
 using Stayora.Services.Chat;
+using System.Net;
+using System.Text.Json;
 
 namespace Stayora.Controllers
 {
@@ -136,6 +137,32 @@ namespace Stayora.Controllers
             return Json(new
             {
                 message = "Yeni sohbet başlatıldı."
+            });
+        }
+        [HttpGet]
+        public async Task<IActionResult> Bootstrap([FromServices] IAntiforgery antiforgery, CancellationToken cancellationToken)
+        {
+            await HttpContext.Session.LoadAsync(cancellationToken);
+
+            var conversationId = HttpContext.Session.GetString(ConversationKey);
+
+            if (string.IsNullOrWhiteSpace(conversationId))
+            {
+                conversationId = Guid.NewGuid().ToString("N");
+
+                HttpContext.Session.SetString(
+                    ConversationKey,
+                    conversationId);
+            }
+
+            await HttpContext.Session.CommitAsync(cancellationToken);
+
+            var tokens = antiforgery.GetAndStoreTokens(HttpContext);
+
+            return Json(new
+            {
+                requestToken = tokens.RequestToken,
+                conversationId
             });
         }
     }
