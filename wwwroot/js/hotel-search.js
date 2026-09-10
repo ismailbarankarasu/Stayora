@@ -13,7 +13,7 @@
         const status = form.querySelector("[data-search-status]");
 
         button.disabled = false;
-        text.textContent = "Otelleri Ara";
+        text.textContent = text.dataset.idleText || "Otelleri Ara";
         spinner.hidden = true;
         status.textContent = "";
     }

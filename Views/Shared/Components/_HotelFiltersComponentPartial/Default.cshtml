@@ -30,7 +30,8 @@
 
     <form asp-controller="Hotels"
           asp-action="Search"
-          method="get">
+          method="get"
+          data-hotel-search-form>
 
         <input type="hidden"
                name="City"
@@ -112,6 +113,21 @@
             Fiyat aralığınız ve sıralamanız korunur.
         </p>
 
-        <button type="submit">Filtreyi Uygula</button>
+        <button type="submit">
+            <span data-search-button-text
+                  data-idle-text="Filtreyi Uygula">
+                Filtreyi Uygula
+            </span>
+
+            <i class="fa fa-spinner fa-spin ml-2"
+               data-search-spinner
+               aria-hidden="true"
+               hidden></i>
+        </button>
+
+        <p class="small text-muted mt-2"
+           data-search-status
+           role="status"
+           aria-live="polite"></p>
     </form>
 </div>
