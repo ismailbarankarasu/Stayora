@@ -32,6 +32,32 @@ builder.Services.AddHttpClient<IBookingService, BookingService>(
             "booking-com15.p.rapidapi.com");
     });
 builder.Services.AddMemoryCache();
+
+builder.Services.AddHttpClient(
+    "Gemini",
+    (serviceProvider, client) =>
+    {
+        var configuration =
+            serviceProvider.GetRequiredService<IConfiguration>();
+
+        var apiKey = configuration["GeminiApi:ApiKey"];
+
+        if (string.IsNullOrWhiteSpace(apiKey))
+        {
+            throw new InvalidOperationException(
+                "GeminiApi:ApiKey ayarı bulunamadı.");
+        }
+
+        client.BaseAddress = new Uri(
+            "https://generativelanguage.googleapis.com/");
+
+        client.Timeout = TimeSpan.FromSeconds(60);
+
+        client.DefaultRequestHeaders.Add(
+            "x-goog-api-key",
+            apiKey);
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
