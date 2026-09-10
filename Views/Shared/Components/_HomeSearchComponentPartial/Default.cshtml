@@ -1,0 +1,73 @@
+﻿@model Stayora.Models.HotelSearchRequest
+
+<div class="booking-form" id="hotel-search">
+    <h3>Konaklamanı Bul</h3>
+
+    <form asp-controller="Hotels"
+          asp-action="Search"
+          method="get"
+          data-hotel-search-form>
+
+        <div asp-validation-summary="All"
+             class="text-danger mb-3"></div>
+
+        <div class="check-date">
+            <label asp-for="City">Nereye gitmek istiyorsun?</label>
+            <input asp-for="City"
+                   type="text"
+                   placeholder="Örn. İstanbul"
+                   maxlength="100"
+                   required>
+            <i class="icon_pin_alt"></i>
+        </div>
+
+        <div class="check-date">
+            <label asp-for="CheckIn">Giriş tarihi</label>
+            <input asp-for="CheckIn"
+                   type="date"
+                   asp-format="{0:yyyy-MM-dd}"
+                   required>
+        </div>
+
+        <div class="check-date">
+            <label asp-for="CheckOut">Çıkış tarihi</label>
+            <input asp-for="CheckOut"
+                   type="date"
+                   asp-format="{0:yyyy-MM-dd}"
+                   required>
+        </div>
+
+        <div class="select-option">
+            <label asp-for="Adults">Yetişkin sayısı</label>
+            <select asp-for="Adults">
+                @for (var count = 1; count <= 8; count++)
+                {
+                    <option value="@count">@count Yetişkin</option>
+                }
+            </select>
+        </div>
+
+        <div class="select-option">
+            <label asp-for="Rooms">Oda sayısı</label>
+            <select asp-for="Rooms">
+                @for (var count = 1; count <= 4; count++)
+                {
+                    <option value="@count">@count Oda</option>
+                }
+            </select>
+        </div>
+
+        <button type="submit">
+            <span data-search-button-text>Otelleri Ara</span>
+            <i class="fa fa-spinner fa-spin ml-2"
+               data-search-spinner
+               aria-hidden="true"
+               hidden></i>
+        </button>
+
+        <p class="small text-muted mt-2"
+           data-search-status
+           role="status"
+           aria-live="polite"></p>
+    </form>
+</div>

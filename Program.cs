@@ -1,7 +1,36 @@
+using Stayora.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddHttpClient<IBookingService, BookingService>(
+    (serviceProvider, client) =>
+    {
+        var configuration =
+            serviceProvider.GetRequiredService<IConfiguration>();
+
+        var apiKey = configuration["BookingApi:ApiKey"];
+
+        if (string.IsNullOrWhiteSpace(apiKey))
+        {
+            throw new InvalidOperationException(
+                "BookingApi:ApiKey ayarı bulunamadı.");
+        }
+
+        client.BaseAddress = new Uri(
+            "https://booking-com15.p.rapidapi.com/");
+
+        client.Timeout = TimeSpan.FromSeconds(30);
+
+        client.DefaultRequestHeaders.Add(
+            "x-rapidapi-key", apiKey);
+
+        client.DefaultRequestHeaders.Add(
+            "x-rapidapi-host",
+            "booking-com15.p.rapidapi.com");
+    });
 
 var app = builder.Build();
 

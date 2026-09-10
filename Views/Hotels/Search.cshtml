@@ -1,0 +1,269 @@
+﻿@model Stayora.Models.HotelSearchResultViewModel
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Otel Arama";
+
+    var numberCulture = CultureInfo.GetCultureInfo("tr-TR");
+
+    var nights = Model.Search.CheckIn.HasValue &&
+                 Model.Search.CheckOut.HasValue
+        ? Model.Search.CheckOut.Value.DayNumber
+          - Model.Search.CheckIn.Value.DayNumber
+        : 0;
+}
+
+<section class="rooms-section spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                @await Component.InvokeAsync(
+                    "_HomeSearchComponentPartial",
+                    new { search = Model.Search })
+            </div>
+
+            <div class="col-lg-8">
+                <div class="section-title text-left">
+                    <span>Konaklamanı Keşfet</span>
+                    <h2>
+                        @(Model.Destination?.Name ?? "Otel Arama")
+                    </h2>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+                {
+                    <div class="alert alert-warning" role="alert">
+                        @Model.ErrorMessage
+                    </div>
+                }
+                else if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-warning" role="alert">
+                        Lütfen arama formundaki bilgileri kontrol edin.
+                    </div>
+                }
+                else if (Model.Hotels.Count == 0)
+                {
+                    <div class="alert alert-info" role="status">
+                        @if (Model.Search.PageNumber > 1)
+                        {
+                            <span>
+                                Bu sayfada gösterilecek otel bulunamadı.
+                                Önceki sayfaya dönebilirsiniz.
+                            </span>
+                        }
+                        else
+                        {
+                            <span>
+                                Seçtiğiniz kriterlere uygun otel bulunamadı.
+                                Farklı tarihlerle tekrar arayabilirsiniz.
+                            </span>
+                        }
+                    </div>
+
+                    @if (Model.Search.PageNumber > 1)
+                    {
+                        <a asp-controller="Hotels"
+                           asp-action="Search"
+                           asp-route-City="@Model.Search.City"
+                           asp-route-CheckIn="@(Model.Search.CheckIn?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))"
+                           asp-route-CheckOut="@(Model.Search.CheckOut?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))"
+                           asp-route-Adults="@Model.Search.Adults"
+                           asp-route-Rooms="@Model.Search.Rooms"
+                           asp-route-PageNumber="@(Model.Search.PageNumber - 1)"
+                           class="btn btn-outline-dark">
+                            ← Önceki Sayfaya Dön
+                        </a>
+                    }
+                }
+                else
+                {
+                    <p class="mb-4">
+                        @Model.Search.CheckIn?.ToString("dd.MM.yyyy")
+                        –
+                        @Model.Search.CheckOut?.ToString("dd.MM.yyyy")
+                        · @nights gece
+                        · @Model.Search.Adults yetişkin
+                        · @Model.Search.Rooms oda
+                        <br>
+                        Bu sayfada @Model.Hotels.Count otel gösteriliyor.
+                    </p>
+
+                    <div class="row">
+                        @foreach (var hotel in Model.Hotels)
+                        {
+                            var property = hotel.Property!;
+                            var photo = property.PhotoUrls.FirstOrDefault();
+
+                            var price = property.PriceBreakdown?.GrossPrice;
+                            var oldPrice =
+                                property.PriceBreakdown?.StrikethroughPrice;
+                            var excludedPrice =
+                                property.PriceBreakdown?.ExcludedPrice;
+
+                            <div class="col-md-6 mb-4">
+                                <article class="room-item h-100">
+                                    @if (!string.IsNullOrWhiteSpace(photo))
+                                    {
+                                        <img src="@photo"
+                                             alt="@property.Name"
+                                             loading="lazy"
+                                             style="height: 220px; width: 100%;
+                                        object-fit: cover;">
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-light d-flex
+                                            align-items-center
+                                            justify-content-center"
+                                             style="height: 220px;">
+                                            Fotoğraf bulunamadı
+                                        </div>
+                                    }
+
+                                    <div class="ri-text">
+                                        <h4>@property.Name</h4>
+
+                                        <p>
+                                            <i class="icon_pin_alt"
+                                               aria-hidden="true"></i>
+                                            @(property.DestinationName
+                                                ?? Model.Destination?.Name)
+                                        </p>
+
+                                        @if (property.ReviewScore.HasValue)
+                                        {
+                                            <p>
+                                                <strong>
+                                                    @property.ReviewScore.Value.ToString(
+                                                        "0.0", numberCulture)
+                                                </strong>
+                                                / 10
+
+                                                @if (property.ReviewCount.HasValue)
+                                                {
+                                                    <span>
+                                                        · @property.ReviewCount yorum
+                                                    </span>
+                                                }
+                                            </p>
+                                        }
+
+                                        @if (price?.Value is decimal amount)
+                                        {
+                                            @if (oldPrice?.Value is decimal oldAmount
+                                                && oldAmount > amount
+                                                && oldPrice.Currency == price.Currency)
+                                            {
+                                                <div class="text-muted">
+                                                    <del>
+                                                        @oldAmount.ToString(
+                                                            "N2", numberCulture)
+                                                        @oldPrice.Currency
+                                                    </del>
+                                                </div>
+                                            }
+
+                                            <div class="mb-2">
+                                                <strong style="font-size: 24px;
+                                                    color: #dfa974;">
+                                                    @amount.ToString(
+                                                        "N2", numberCulture)
+                                                    @price.Currency
+                                                </strong>
+                                            </div>
+
+                                            <p>
+                                                Seçilen konaklama için gösterilen fiyat
+                                                <br>
+                                                <small>
+                                                    @nights gece ·
+                                                    @Model.Search.Rooms oda
+                                                </small>
+                                            </p>
+
+                                            @if (excludedPrice?.Value is decimal extra
+                                                && extra > 0)
+                                            {
+                                                <p class="small text-muted">
+                                                    Ek vergi ve ücretler:
+                                                    @extra.ToString(
+                                                        "N2", numberCulture)
+                                                    @excludedPrice.Currency
+                                                </p>
+                                            }
+
+                                            @if (property.PriceBreakdown is not null)
+                                            {
+                                                @foreach (var badge in
+                                                    property.PriceBreakdown.BenefitBadges)
+                                                {
+                                                    <p class="small text-success">
+                                                        @badge.Text
+                                                    </p>
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <p>Fiyat bilgisi bulunamadı.</p>
+                                        }
+                                        <a asp-controller="Hotels"
+                                           asp-action="Details"
+                                           asp-route-hotelId="@hotel.HotelId"
+                                           asp-route-City="@Model.Search.City"
+                                           asp-route-CheckIn="@(Model.Search.CheckIn?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))"
+                                           asp-route-CheckOut="@(Model.Search.CheckOut?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))"
+                                           asp-route-Adults="@Model.Search.Adults"
+                                           asp-route-Rooms="@Model.Search.Rooms"
+                                           asp-route-PageNumber="@Model.Search.PageNumber"
+                                           class="primary-btn">
+                                            Oteli İncele
+                                        </a>
+                                    </div>
+                                </article>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+        <nav class="d-flex align-items-center justify-content-between mt-4"
+             aria-label="Otel sonuç sayfaları">
+
+            <div>
+                @if (Model.Search.PageNumber > 1)
+                {
+                    <a asp-controller="Hotels"
+                       asp-action="Search"
+                       asp-route-City="@Model.Search.City"
+                       asp-route-CheckIn="@(Model.Search.CheckIn?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))"
+                       asp-route-CheckOut="@(Model.Search.CheckOut?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))"
+                       asp-route-Adults="@Model.Search.Adults"
+                       asp-route-Rooms="@Model.Search.Rooms"
+                       asp-route-PageNumber="@(Model.Search.PageNumber - 1)"
+                       class="btn btn-outline-dark">
+                        ← Önceki
+                    </a>
+                }
+            </div>
+
+            <span>Sayfa @Model.Search.PageNumber</span>
+
+            <div>
+                <a asp-controller="Hotels"
+                   asp-action="Search"
+                   asp-route-City="@Model.Search.City"
+                   asp-route-CheckIn="@(Model.Search.CheckIn?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))"
+                   asp-route-CheckOut="@(Model.Search.CheckOut?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))"
+                   asp-route-Adults="@Model.Search.Adults"
+                   asp-route-Rooms="@Model.Search.Rooms"
+                   asp-route-PageNumber="@(Model.Search.PageNumber + 1)"
+                   class="btn btn-outline-dark">
+                    Sonraki →
+                </a>
+            </div>
+        </nav>
+    </div>
+
+</section>

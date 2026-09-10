@@ -1,0 +1,219 @@
+﻿@model Stayora.Models.HotelDetailsViewModel
+@using System.Globalization
+@using Stayora.Dtos.Booking
+
+@{
+    ViewData["Title"] = Model.Hotel?.HotelName ?? "Otel Detayı";
+
+    var culture = CultureInfo.GetCultureInfo("tr-TR");
+    var hotel = Model.Hotel;
+
+    var photos = hotel?.Rooms.Values
+        .SelectMany(room => room.Photos)
+        .Select(photo =>
+            !string.IsNullOrWhiteSpace(photo.LargeUrl)
+                ? photo.LargeUrl
+                : photo.OriginalUrl)
+        .OfType<string>()
+        .Where(url => !string.IsNullOrWhiteSpace(url))
+        .Distinct()
+        .Take(8)
+        .ToList() ?? new List<string>();
+
+    var total = hotel?.PriceBreakdown?.AllInclusiveAmount;
+
+    var nights = Model.Search.CheckIn.HasValue &&
+                 Model.Search.CheckOut.HasValue
+        ? Model.Search.CheckOut.Value.DayNumber
+          - Model.Search.CheckIn.Value.DayNumber
+        : 0;
+}
+
+<section class="room-details-section spad">
+    <div class="container">
+        <div class="mb-4">
+            <a asp-controller="Hotels"
+               asp-action="Search"
+               asp-route-City="@Model.Search.City"
+               asp-route-CheckIn="@(Model.Search.CheckIn?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))"
+               asp-route-CheckOut="@(Model.Search.CheckOut?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))"
+               asp-route-Adults="@Model.Search.Adults"
+               asp-route-Rooms="@Model.Search.Rooms"
+               asp-route-PageNumber="@Model.Search.PageNumber"
+               class="primary-btn">
+                Arama Sonuçlarına Dön
+            </a>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+        {
+            <div class="alert alert-warning" role="alert">
+                @Model.ErrorMessage
+            </div>
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               asp-fragment="hotel-search">
+                Yeni Arama Yap
+            </a>
+        }
+        else if (hotel is not null)
+        {
+            <div class="section-title text-left">
+                <span>@hotel.City · @hotel.Country</span>
+                <h2>@hotel.HotelName</h2>
+            </div>
+
+            <p>
+                <i class="icon_pin_alt" aria-hidden="true"></i>
+                @hotel.Address
+            </p>
+
+            @if (hotel.ReviewCount.HasValue)
+            {
+                <p>@hotel.ReviewCount değerlendirme</p>
+            }
+
+            @if (photos.Count > 0)
+            {
+                <h4 class="mb-3">Oda Fotoğrafları</h4>
+
+                <div class="row mb-4">
+                    @foreach (var photo in photos)
+                    {
+                        <div class="col-md-6 mb-3">
+                            <img src="@photo"
+                                 alt="@hotel.HotelName oda fotoğrafı"
+                                 loading="lazy"
+                                 style="width: 100%; height: 280px;
+                            object-fit: cover;">
+                        </div>
+                    }
+                </div>
+            }
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <h4 class="mb-3">Otel Olanakları</h4>
+
+                    @if (hotel.FacilitiesBlock?.Facilities?.Count > 0)
+                    {
+                        <div class="row mb-4">
+                            @foreach (var facility in
+                                hotel.FacilitiesBlock.Facilities)
+                            {
+                                <div class="col-sm-6 mb-3">
+                                    <i class="fa fa-check text-success"
+                                       aria-hidden="true"></i>
+                                    @facility.Name
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p>Olanak bilgisi bulunamadı.</p>
+                    }
+
+                    @{
+                        var descriptions = hotel.Rooms.Values
+                            .Select(room => room.Description)
+                            .OfType<string>()
+                            .Where(text => !string.IsNullOrWhiteSpace(text))
+                            .Distinct()
+                            .ToList();
+                    }
+
+                    @if (descriptions.Count > 0)
+                    {
+                        <h4 class="mb-3">Oda Bilgileri</h4>
+
+                        @foreach (var description in descriptions)
+                        {
+                            <p>@description</p>
+                        }
+                    }
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="booking-form">
+                        <h3>Konaklama Özeti</h3>
+
+                        <p>
+                            <strong>Giriş:</strong>
+                            @Model.Search.CheckIn?.ToString("dd.MM.yyyy")
+                            <br>
+
+                            <strong>Çıkış:</strong>
+                            @Model.Search.CheckOut?.ToString("dd.MM.yyyy")
+                        </p>
+
+                        <p>
+                            @nights gece ·
+                            @Model.Search.Adults yetişkin ·
+                            @Model.Search.Rooms oda
+                        </p>
+
+                        @if (hotel.SoldOut == 1)
+                        {
+                            <div class="alert alert-warning">
+                                Seçilen tarihler için müsaitlik bulunamadı.
+                            </div>
+                        }
+                        else if (total?.Value is decimal amount)
+                        {
+                            <p class="mb-2">
+                                Vergi ve ücretler dahil gösterilen toplam
+                            </p>
+
+                            <h3 style="color: #dfa974;">
+                                @amount.ToString("N2", culture)
+                                @total.Currency
+                            </h3>
+
+                            @foreach (var benefit in
+                                hotel.PriceBreakdown?.Benefits
+                                ?? new List<HotelDetailBenefitDto>())
+                            {
+                                <p class="small">
+                                    <strong>@benefit.Name</strong>
+                                    <br>
+                                    @benefit.Details
+                                </p>
+                            }
+
+                            <p class="small text-muted">
+                                Fiyat ve müsaitlik rezervasyon
+                                sırasında değişebilir.
+                            </p>
+                        }
+                        else
+                        {
+                            <p>Toplam fiyat bilgisi bulunamadı.</p>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(Model.ReservationUrl) && hotel.SoldOut != 1)
+                        {
+                            <a href="@Model.ReservationUrl"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="btn btn-block mt-4"
+                               style="background-color: #dfa974;
+                                color: #ffffff;
+                                padding: 14px 18px;
+                                font-weight: 600;">
+                                Booking.com’da Rezervasyona Devam Et
+                                <i class="fa fa-external-link ml-1"
+                                   aria-hidden="true"></i>
+                            </a>
+
+                            <p class="small text-muted mt-3">
+                                Booking.com yeni sekmede açılır.
+                                Rezervasyon ve ödeme işlemleri ilgili sitede tamamlanır.
+                            </p>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
