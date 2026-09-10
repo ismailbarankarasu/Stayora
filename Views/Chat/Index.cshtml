@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Stayora AI Test";
+}
+
+<section class="spad">
+    <div class="container">
+        <h2 class="mb-3">Stayora AI</h2>
+
+        <p>
+            Seyahat planını yaz. Asistan eksik bilgileri sorarak
+            uygun otelleri aramaya yardımcı olacak.
+        </p>
+
+        <form id="chat-test-form"
+              asp-controller="Chat"
+              asp-action="Send"
+              method="post">
+
+            <div class="form-group">
+                <label for="chat-message">Mesajınız</label>
+
+                <textarea id="chat-message"
+                          name="Message"
+                          class="form-control"
+                          rows="3"
+                          maxlength="2000"
+                          required></textarea>
+            </div>
+
+            <button type="submit"
+                    id="chat-send-button"
+                    class="btn btn-dark">
+                Gönder
+            </button>
+
+            <button type="button"
+                    id="chat-new-button"
+                    data-url="@Url.Action("New", "Chat")"
+                    class="btn btn-outline-dark ml-2">
+                Yeni Sohbet
+            </button>
+        </form>
+
+        <p id="chat-status"
+           class="mt-3"
+           role="status"
+           aria-live="polite"></p>
+
+        <div id="chat-test-history" class="mt-4"></div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/chat-test.js"
+            asp-append-version="true"></script>
+}
