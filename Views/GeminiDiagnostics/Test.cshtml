@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Gemini Bağlantı Testi";
+}
+
+<section class="spad">
+    <div class="container">
+        <h2 class="mb-3">Gemini Yanıt Testi</h2>
+
+        <p>
+            Butona basınca Gemini’den kısa bir Türkçe
+            karşılama mesajı istenecek.
+        </p>
+
+        <form asp-controller="GeminiDiagnostics"
+              asp-action="TestReply"
+              method="post">
+
+            <button type="submit" class="btn btn-dark">
+                Test Mesajı Gönder
+            </button>
+        </form>
+    </div>
+</section>
