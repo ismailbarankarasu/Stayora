@@ -60,7 +60,8 @@ builder.Services.AddHttpClient(
     });
 
 builder.Services.AddScoped<GeminiChatClient>();
-
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IHotelChatService, HotelChatService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
