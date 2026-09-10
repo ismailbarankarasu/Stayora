@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    @await Component.InvokeAsync("_LayoutHeadComponentPartial")
+
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    @await Component.InvokeAsync("_LayoutOffcanvasComponentPartial")
+
+    @await Component.InvokeAsync("_LayoutHeaderComponentPartial")
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    @await Component.InvokeAsync("_LayoutFooterComponentPartial")
+
+    @await Component.InvokeAsync("_LayoutSearchComponentPartial")
+
+    @await Component.InvokeAsync("_LayoutScriptComponentPartial")
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
