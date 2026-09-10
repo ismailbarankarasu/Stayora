@@ -172,7 +172,7 @@
 
                             <h3 style="color: #dfa974;">
                                 @amount.ToString("N2", culture)
-                                @total.Currency
+                                @(total.Currency == "TRY" ? "TL" : total.Currency)
                             </h3>
 
                             @foreach (var benefit in

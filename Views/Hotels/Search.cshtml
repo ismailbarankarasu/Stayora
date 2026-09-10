@@ -176,7 +176,7 @@
                                                     <del>
                                                         @oldAmount.ToString(
                                                             "N2", numberCulture)
-                                                        @oldPrice.Currency
+                                                        @(oldPrice.Currency == "TRY" ? "TL" : oldPrice.Currency)
                                                     </del>
                                                 </div>
                                             }
@@ -186,7 +186,7 @@
                                                     color: #dfa974;">
                                                     @amount.ToString(
                                                         "N2", numberCulture)
-                                                    @price.Currency
+                                                    @(price.Currency == "TRY" ? "TL" : price.Currency)
                                                 </strong>
                                             </div>
 
@@ -206,7 +206,7 @@
                                                     Ek vergi ve ücretler:
                                                     @extra.ToString(
                                                         "N2", numberCulture)
-                                                    @excludedPrice.Currency
+                                                    @(excludedPrice.Currency == "TRY" ? "TL" : excludedPrice.Currency)
                                                 </p>
                                             }
 

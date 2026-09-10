@@ -4,7 +4,6 @@ using Stayora.Dtos.Booking;
 using Stayora.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using System.Net.Http.Json;
 
 namespace Stayora.Services
 {
@@ -110,7 +109,7 @@ namespace Stayora.Services
                     CultureInfo.InvariantCulture),
 
                 ["languagecode"] = "en-us",
-                ["currency_code"] = "AED"
+                ["currency_code"] = "TRY"
             };
 
             var url = QueryHelpers.AddQueryString(
@@ -202,7 +201,7 @@ namespace Stayora.Services
                     CultureInfo.InvariantCulture),
 
                 ["languagecode"] = "en-us",
-                ["currency_code"] = "AED",
+                ["currency_code"] = "TRY",
                 ["location"] = "US",
                 ["sort_by"] = request.SortBy
             };
