@@ -17,9 +17,12 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-4 mb-4">
-                @await Component.InvokeAsync(
-                    "_HomeSearchComponentPartial",
-                    new { search = Model.Search })
+                @await Component.InvokeAsync("_HomeSearchComponentPartial", new { search = Model.Search })
+
+                @if (Model.Destination is not null)
+                {
+                    @await Component.InvokeAsync("_HotelFiltersComponentPartial", new { model = Model })
+                }
             </div>
 
             <div class="col-lg-8">

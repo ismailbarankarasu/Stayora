@@ -11,5 +11,8 @@ namespace Stayora.Models
         public List<HotelSearchItemDto> Hotels { get; set; } = [];
 
         public string? ErrorMessage { get; set; }
+        public List<HotelFilterGroupDto> FilterGroups { get; set; } = [];
+
+        public string? FilterErrorMessage { get; set; }
     }
 }

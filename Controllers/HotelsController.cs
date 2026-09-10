@@ -66,6 +66,43 @@ namespace Stayora.Controllers
                 model.Hotels = result.Hotels
                     .Where(x => x.Property is not null)
                     .ToList();
+                try
+                {
+                    var filterData = await _bookingService.GetFiltersAsync(
+                        destination,
+                        request,
+                        cancellationToken);
+
+                    var visibleFields = new HashSet<string>(
+                        StringComparer.OrdinalIgnoreCase)
+                        {"class", "review_score", "hotelfacility", "mealplan", "fc", "ht_id" };
+
+                    model.FilterGroups = filterData.Filters
+                        .Where(group =>
+                            visibleFields.Contains(group.Field) &&
+                            group.Options.Count > 0)
+                        .ToList();
+                }
+                catch (OperationCanceledException)
+                    when (!cancellationToken.IsCancellationRequested)
+                {
+                    model.FilterErrorMessage =
+                        "Ek filtreler zamanında yüklenemedi. " +
+                        "Otel sonuçlarını incelemeye devam edebilirsiniz.";
+                }
+                catch (Exception exception)
+                    when (exception is HttpRequestException
+                        or JsonException
+                        or InvalidOperationException)
+                {
+                    _logger.LogWarning(
+                        exception,
+                        "Otel filtreleri yüklenemedi.");
+
+                    model.FilterErrorMessage =
+                        "Ek filtreler şu anda yüklenemiyor. " +
+                        "Otel sonuçlarını incelemeye devam edebilirsiniz.";
+                }
             }
             catch (OperationCanceledException)
                 when (!cancellationToken.IsCancellationRequested)

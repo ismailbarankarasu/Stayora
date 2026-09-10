@@ -1,0 +1,117 @@
+﻿@model Stayora.Models.HotelSearchResultViewModel
+@using System.Globalization
+
+@{
+    var groupTitles = new Dictionary<string, string>
+    {
+        ["class"] = "Yıldız Sayısı",
+        ["review_score"] = "Değerlendirme Puanı",
+        ["hotelfacility"] = "Otel Olanakları",
+        ["mealplan"] = "Yemek Seçenekleri",
+        ["fc"] = "İptal Seçeneği",
+        ["ht_id"] = "Konaklama Türü"
+    };
+
+    var selectedFilterExists = Model.FilterGroups
+        .SelectMany(group => group.Options)
+        .Any(option =>
+            option.GenericId == Model.Search.CategoryFilter);
+}
+
+<div class="booking-form mt-4">
+    <h3>Konaklama Filtresi</h3>
+
+    @if (!string.IsNullOrWhiteSpace(Model.FilterErrorMessage))
+    {
+        <div class="alert alert-warning" role="alert">
+            @Model.FilterErrorMessage
+        </div>
+    }
+
+    <form asp-controller="Hotels"
+          asp-action="Search"
+          method="get">
+
+        <input type="hidden"
+               name="City"
+               value="@Model.Search.City">
+
+        <input type="hidden"
+               name="CheckIn"
+               value="@(Model.Search.CheckIn?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))">
+
+        <input type="hidden"
+               name="CheckOut"
+               value="@(Model.Search.CheckOut?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))">
+
+        <input type="hidden"
+               name="Adults"
+               value="@Model.Search.Adults">
+
+        <input type="hidden"
+               name="Rooms"
+               value="@Model.Search.Rooms">
+
+        <input type="hidden"
+               name="SortBy"
+               value="@Model.Search.SortBy">
+
+        <input type="hidden"
+               name="MinPrice"
+               value="@(Model.Search.MinPrice?.ToString(CultureInfo.InvariantCulture))">
+
+        <input type="hidden"
+               name="MaxPrice"
+               value="@(Model.Search.MaxPrice?.ToString(CultureInfo.InvariantCulture))">
+
+        <input type="hidden" name="PageNumber" value="1">
+
+        <div class="mb-3">
+            <label for="hotel-category-filter">Filtre seçimi</label>
+
+            <select id="hotel-category-filter"
+                    name="CategoryFilter"
+                    class="form-control"
+                    aria-describedby="hotel-filter-help">
+
+                <option value=""
+                        selected="@(string.IsNullOrWhiteSpace(Model.Search.CategoryFilter))">
+                    Kategori filtresi yok
+                </option>
+
+                @if (!string.IsNullOrWhiteSpace(Model.Search.CategoryFilter)
+                    && !selectedFilterExists)
+                {
+                    <option value="@Model.Search.CategoryFilter" selected>
+                        Mevcut seçim (@Model.Search.CategoryFilter)
+                    </option>
+                }
+
+                @foreach (var group in Model.FilterGroups)
+                {
+                    var title = groupTitles.TryGetValue(
+                        group.Field, out var translatedTitle)
+                        ? translatedTitle
+                        : group.Title;
+
+                    <optgroup label="@title">
+                        @foreach (var option in group.Options)
+                        {
+                            <option value="@option.GenericId"
+                                    selected="@(option.GenericId == Model.Search.CategoryFilter)">
+                                @option.Title
+                            </option>
+                        }
+                    </optgroup>
+                }
+            </select>
+        </div>
+
+        <p id="hotel-filter-help" class="small text-muted">
+            Bir kategori seçebilirsiniz.
+            Fiyat aralığınız ve sıralamanız korunur.
+        </p>
+
+        <button type="submit">Filtreyi Uygula</button>
+    </form>
+</div>

@@ -53,7 +53,9 @@ namespace Stayora.Models
         [RegularExpression("^(popularity|price|price_from_high_to_low|bayesian_review_score|distance|class_descending|class_ascending|upsort_bh)$", ErrorMessage = "Geçersiz sıralama seçimi.")]
         public string SortBy { get; set; } = "popularity";
 
-        [RegularExpression("^class::[0-5]$", ErrorMessage = "Geçersiz yıldız filtresi.")]
+        [RegularExpression(
+            @"^(class::[0-5]|reviewscorebuckets::(50|60|70|80|90)|facility::[0-9]+|property_type::[0-9]+|privacy_type::3|free_cancellation::1|mealplan::(breakfast_included|breakfast_and_dinner|all_inclusive|full_board|breakfast_and_lunch|999))$",
+            ErrorMessage = "Geçersiz filtre seçimi.")]
         public string? CategoryFilter { get; set; }
 
         [Range(typeof(decimal), "0", "100000000", ErrorMessage = "Minimum fiyat 0 ile 100.000.000 arasında olmalı.")]

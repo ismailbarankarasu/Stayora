@@ -104,6 +104,6 @@
     /*------------------
 		Nice Select
 	--------------------*/
-    $("select").niceSelect();
+    $("select").not("#hotel-category-filter").niceSelect();
 
 })(jQuery);

@@ -19,6 +19,66 @@ namespace Stayora.Services
             _cache = cache;
         }
 
+        public async Task<HotelFilterDataDto> GetFiltersAsync(DestinationDto destination, HotelSearchRequest request, CancellationToken cancellationToken = default)
+        {
+            Validator.ValidateObject(
+                request,
+                new ValidationContext(request),
+                validateAllProperties: true);
+
+            if (string.IsNullOrWhiteSpace(destination.DestinationId) ||
+                string.IsNullOrWhiteSpace(destination.SearchType))
+            {
+                throw new ArgumentException(
+                    "Geçerli bir destinasyon seçilmelidir.",
+                    nameof(destination));
+            }
+
+            var parameters = new Dictionary<string, string?>
+            {
+                ["dest_id"] = destination.DestinationId,
+
+                ["search_type"] =
+                    destination.SearchType.ToUpperInvariant(),
+
+                ["arrival_date"] = request.CheckIn!.Value.ToString(
+                    "yyyy-MM-dd", CultureInfo.InvariantCulture),
+
+                ["departure_date"] = request.CheckOut!.Value.ToString(
+                    "yyyy-MM-dd", CultureInfo.InvariantCulture),
+
+                ["adults"] = request.Adults.ToString(
+                    CultureInfo.InvariantCulture),
+
+                ["room_qty"] = request.Rooms.ToString(
+                    CultureInfo.InvariantCulture)
+            };
+
+            var url = QueryHelpers.AddQueryString(
+                "api/v1/hotels/getFilter",
+                parameters);
+
+            var cacheKey = $"booking:filters:{url}";
+
+            if (_cache.TryGetValue(
+                    cacheKey,
+                    out HotelFilterDataDto? cachedFilters)
+                && cachedFilters is not null)
+            {
+                return cachedFilters;
+            }
+
+            var filters = await GetDataAsync<HotelFilterDataDto>(
+                url, cancellationToken);
+
+            _cache.Set(
+                cacheKey,
+                filters,
+                TimeSpan.FromMinutes(2));
+
+            return filters;
+        }
+
         public async Task<HotelDetailsDto> GetHotelDetailsAsync(long hotelId, HotelSearchRequest request, CancellationToken cancellationToken = default)
         {
             if (hotelId <= 0)
