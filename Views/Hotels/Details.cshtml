@@ -82,15 +82,29 @@
             {
                 <h4 class="mb-3">Oda Fotoğrafları</h4>
 
-                <div class="row mb-4">
-                    @foreach (var photo in photos)
+                <p class="text-muted">
+                    Fotoğrafları büyütmek için üzerlerine tıklayabilirsiniz.
+                </p>
+
+                <div class="row mb-4" id="hotel-photo-gallery">
+                    @for (var i = 0; i < photos.Count; i++)
                     {
+                        var photo = photos[i];
+
                         <div class="col-md-6 mb-3">
-                            <img src="@photo"
-                                 alt="@hotel.HotelName oda fotoğrafı"
-                                 loading="lazy"
-                                 style="width: 100%; height: 280px;
-                            object-fit: cover;">
+                            <a href="@photo"
+                               class="hotel-gallery-link"
+                               title="@(hotel.HotelName + " — Oda fotoğrafı " + (i + 1))"
+                               aria-label="@("Oda fotoğrafı " + (i + 1) + " büyüt")">
+
+                                <img src="@photo"
+                                     alt="@(hotel.HotelName + " oda fotoğrafı " + (i + 1))"
+                                     loading="lazy"
+                                     style="width: 100%;
+                                height: 280px;
+                                object-fit: cover;
+                                cursor: zoom-in;">
+                            </a>
                         </div>
                     }
                 </div>
@@ -221,3 +235,7 @@
         }
     </div>
 </section>
+@section Scripts {
+    <script src="~/js/hotel-details.js"
+            asp-append-version="true"></script>
+}
