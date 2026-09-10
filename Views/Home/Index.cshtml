@@ -4,6 +4,13 @@
 
 @await Component.InvokeAsync("_HomeHeroComponentPartial")
 
+@await Component.InvokeAsync("_HomeDestinationsComponentPartial")
+
 @await Component.InvokeAsync("_HomeAboutComponentPartial")
 
 @await Component.InvokeAsync("_HomeHowItWorksComponentPartial")
+
+@section Scripts {
+    <script src="~/js/home-destinations.js"
+            asp-append-version="true"></script>
+}

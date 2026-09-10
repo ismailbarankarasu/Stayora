@@ -1,0 +1,45 @@
+﻿@{
+    var destinations = new[]
+    {
+        new { City = "İstanbul", Country = "Türkiye" },
+        new { City = "Antalya", Country = "Türkiye" },
+        new { City = "Berlin", Country = "Almanya" },
+        new { City = "Paris", Country = "Fransa" },
+        new { City = "Roma", Country = "İtalya" },
+        new { City = "Londra", Country = "Birleşik Krallık" }
+    };
+}
+
+<section class="services-section spad" id="destinations">
+    <div class="container">
+        <div class="section-title">
+            <span>Bir Sonraki Durağın</span>
+            <h2>Şehirleri Keşfet</h2>
+        </div>
+
+        <div class="row">
+            @foreach (var destination in destinations)
+            {
+                <div class="col-lg-4 col-sm-6 mb-4">
+                    <a href="#hotel-search"
+                       class="destination-card"
+                       data-destination-city="@destination.City"
+                       aria-label="@(destination.City + " için otel ara")">
+
+                        <i class="icon_pin_alt"
+                           aria-hidden="true"></i>
+
+                        <h4>@destination.City</h4>
+                        <p>@destination.Country</p>
+
+                        <span>
+                            Otelleri Keşfet
+                            <i class="fa fa-angle-right"
+                               aria-hidden="true"></i>
+                        </span>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</section>
