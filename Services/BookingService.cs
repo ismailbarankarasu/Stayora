@@ -242,21 +242,28 @@ namespace Stayora.Services
                     TimeSpan.FromMinutes(2));
             }
 
+            var hotels = apiResult.Hotels
+                .Skip(skipCount)
+                .Take(displayPageSize)
+                .ToList();
+
+            var hasMoreInCurrentBatch = apiResult.Hotels.Count > skipCount + displayPageSize;
+
+            var mightHaveNextApiPage = apiResult.Hotels.Count == apiPageSize;
+
             return new HotelSearchDataDto
             {
-                Hotels = apiResult.Hotels
-                    .Skip(skipCount)
-                    .Take(displayPageSize)
-                    .ToList(),
+                Hotels = hotels,
 
-                Meta = apiResult.Meta
+                Meta = apiResult.Meta,
+
+                HasNextPage = hasMoreInCurrentBatch || mightHaveNextApiPage
             };
         }
 
         private async Task<T> GetDataAsync<T>(string url, CancellationToken cancellationToken) where T : class
         {
-            using var response = await _httpClient.GetAsync(
-                url, cancellationToken);
+            using var response = await _httpClient.GetAsync(url, cancellationToken);
 
             response.EnsureSuccessStatusCode();
 

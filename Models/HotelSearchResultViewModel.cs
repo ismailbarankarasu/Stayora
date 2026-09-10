@@ -14,5 +14,6 @@ namespace Stayora.Models
         public List<HotelFilterGroupDto> FilterGroups { get; set; } = [];
 
         public string? FilterErrorMessage { get; set; }
+        public bool HasNextPage { get; set; }
     }
 }

@@ -66,6 +66,7 @@ namespace Stayora.Controllers
                 model.Hotels = result.Hotels
                     .Where(x => x.Property is not null)
                     .ToList();
+                model.HasNextPage = result.HasNextPage;
                 try
                 {
                     var filterData = await _bookingService.GetFiltersAsync(

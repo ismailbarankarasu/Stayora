@@ -9,6 +9,8 @@ namespace Stayora.Dtos.Booking
 
         [JsonPropertyName("meta")]
         public List<HotelSearchMetaDto> Meta { get; set; } = [];
+        [JsonIgnore]
+        public bool HasNextPage { get; set; }
     }
 
     public class HotelSearchItemDto
