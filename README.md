@@ -260,4 +260,4 @@ Kurulumdan sonra aşağıdaki akışlar kontrol edilebilir:
 
 Arayüz, [Colorlib Sona](https://colorlib.com/wp/template/sona/) teması üzerine uyarlanmıştır. Tema atfı footer’da korunur. Üçüncü taraf tema ve varlıklar kendi lisans koşullarına tabidir; repoda ayrıca bir uygulama `LICENSE` dosyası bulunmamaktadır.
 
-Stayora bağımsız bir eğitim/case çalışmasıdır; Booking.com veya Google’ın resmî ürünü değildir.
+Stayora bağımsız bir eğitim/case çalışmasıdır.
