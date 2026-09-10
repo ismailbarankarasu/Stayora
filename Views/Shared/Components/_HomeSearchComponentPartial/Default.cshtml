@@ -57,6 +57,19 @@
             </select>
         </div>
         <div class="select-option">
+            <label asp-for="CategoryFilter">Yıldız Sayısı</label>
+
+            <select asp-for="CategoryFilter">
+                <option value="">Tümü</option>
+                <option value="class::5">5 yıldız</option>
+                <option value="class::4">4 yıldız</option>
+                <option value="class::3">3 yıldız</option>
+                <option value="class::2">2 yıldız</option>
+                <option value="class::1">1 yıldız</option>
+                <option value="class::0">Yıldızsız / sınıflandırılmamış</option>
+            </select>
+        </div>
+        <div class="select-option">
             <label asp-for="SortBy">Sıralama</label>
 
             <select asp-for="SortBy">

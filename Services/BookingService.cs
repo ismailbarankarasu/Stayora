@@ -147,6 +147,11 @@ namespace Stayora.Services
                 ["sort_by"] = request.SortBy
             };
 
+            if (!string.IsNullOrWhiteSpace(request.CategoryFilter))
+            {
+                parameters["categories_filter"] = request.CategoryFilter;
+            }
+
             var url = QueryHelpers.AddQueryString(
                 "api/v1/hotels/searchHotels",
                 parameters);

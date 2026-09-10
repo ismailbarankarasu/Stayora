@@ -72,6 +72,7 @@
                            asp-route-Rooms="@Model.Search.Rooms"
                            asp-route-PageNumber="@(Model.Search.PageNumber - 1)"
                            asp-route-SortBy="@Model.Search.SortBy"
+                           asp-route-CategoryFilter="@Model.Search.CategoryFilter"
                            class="btn btn-outline-dark">
                             ← Önceki Sayfaya Dön
                         </a>
@@ -124,7 +125,17 @@
 
                                     <div class="ri-text">
                                         <h4>@property.Name</h4>
+                                        @if (property.PropertyClass is int stars && stars >= 1 && stars <= 5)
+                                        {
+                                            <div class="mb-2" style="color: #dfa974;">
+                                                <span class="sr-only">@stars yıldız</span>
 
+                                                @for (var i = 0; i < stars; i++)
+                                                {
+                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                }
+                                            </div>
+                                        }
                                         <p>
                                             <i class="icon_pin_alt"
                                                aria-hidden="true"></i>
@@ -244,6 +255,7 @@
                        asp-route-Rooms="@Model.Search.Rooms"
                        asp-route-PageNumber="@(Model.Search.PageNumber - 1)"
                        asp-route-SortBy="@Model.Search.SortBy"
+                       asp-route-CategoryFilter="@Model.Search.CategoryFilter"
                        class="btn btn-outline-dark">
                         ← Önceki
                     </a>
@@ -262,6 +274,7 @@
                    asp-route-Rooms="@Model.Search.Rooms"
                    asp-route-PageNumber="@(Model.Search.PageNumber + 1)"
                    asp-route-SortBy="@Model.Search.SortBy"
+                   asp-route-CategoryFilter="@Model.Search.CategoryFilter"
                    class="btn btn-outline-dark">
                     Sonraki →
                 </a>

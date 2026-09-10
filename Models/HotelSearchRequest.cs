@@ -45,5 +45,8 @@ namespace Stayora.Models
         }
         [RegularExpression("^(popularity|price|price_from_high_to_low|bayesian_review_score|distance|class_descending|class_ascending|upsort_bh)$", ErrorMessage = "Geçersiz sıralama seçimi.")]
         public string SortBy { get; set; } = "popularity";
+
+        [RegularExpression("^class::[0-5]$", ErrorMessage = "Geçersiz yıldız filtresi.")]
+        public string? CategoryFilter { get; set; }
     }
 }
