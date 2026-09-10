@@ -6,4 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewComponents\" />
+    <Folder Include="Views\Shared\Components\" />
+  </ItemGroup>
+
 </Project>
