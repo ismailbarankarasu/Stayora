@@ -1,4 +1,5 @@
 using Stayora.Services;
+using Stayora.Services.Chat;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,6 +58,8 @@ builder.Services.AddHttpClient(
             "x-goog-api-key",
             apiKey);
     });
+
+builder.Services.AddScoped<GeminiChatClient>();
 
 var app = builder.Build();
 
