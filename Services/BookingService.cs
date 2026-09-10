@@ -152,6 +152,18 @@ namespace Stayora.Services
                 parameters["categories_filter"] = request.CategoryFilter;
             }
 
+            if (request.MinPrice.HasValue)
+            {
+                parameters["price_min"] = request.MinPrice.Value.ToString(
+                    CultureInfo.InvariantCulture);
+            }
+
+            if (request.MaxPrice.HasValue)
+            {
+                parameters["price_max"] = request.MaxPrice.Value.ToString(
+                    CultureInfo.InvariantCulture);
+            }
+
             var url = QueryHelpers.AddQueryString(
                 "api/v1/hotels/searchHotels",
                 parameters);

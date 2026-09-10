@@ -73,6 +73,8 @@
                            asp-route-PageNumber="@(Model.Search.PageNumber - 1)"
                            asp-route-SortBy="@Model.Search.SortBy"
                            asp-route-CategoryFilter="@Model.Search.CategoryFilter"
+                           asp-route-MinPrice="@(Model.Search.MinPrice?.ToString(CultureInfo.InvariantCulture))"
+                           asp-route-MaxPrice="@(Model.Search.MaxPrice?.ToString(CultureInfo.InvariantCulture))"
                            class="btn btn-outline-dark">
                             ← Önceki Sayfaya Dön
                         </a>
@@ -228,6 +230,8 @@
                                            asp-route-CheckOut="@(Model.Search.CheckOut?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))"
                                            asp-route-Adults="@Model.Search.Adults"
                                            asp-route-Rooms="@Model.Search.Rooms"
+                                           asp-route-MinPrice="@(Model.Search.MinPrice?.ToString(CultureInfo.InvariantCulture))"
+                                           asp-route-MaxPrice="@(Model.Search.MaxPrice?.ToString(CultureInfo.InvariantCulture))"
                                            asp-route-PageNumber="@Model.Search.PageNumber"
                                            class="primary-btn">
                                             Oteli İncele
@@ -256,6 +260,8 @@
                        asp-route-PageNumber="@(Model.Search.PageNumber - 1)"
                        asp-route-SortBy="@Model.Search.SortBy"
                        asp-route-CategoryFilter="@Model.Search.CategoryFilter"
+                       asp-route-MinPrice="@(Model.Search.MinPrice?.ToString(CultureInfo.InvariantCulture))"
+                       asp-route-MaxPrice="@(Model.Search.MaxPrice?.ToString(CultureInfo.InvariantCulture))"
                        class="btn btn-outline-dark">
                         ← Önceki
                     </a>
@@ -275,6 +281,8 @@
                    asp-route-PageNumber="@(Model.Search.PageNumber + 1)"
                    asp-route-SortBy="@Model.Search.SortBy"
                    asp-route-CategoryFilter="@Model.Search.CategoryFilter"
+                   asp-route-MinPrice="@(Model.Search.MinPrice?.ToString(CultureInfo.InvariantCulture))"
+                   asp-route-MaxPrice="@(Model.Search.MaxPrice?.ToString(CultureInfo.InvariantCulture))"
                    class="btn btn-outline-dark">
                     Sonraki →
                 </a>

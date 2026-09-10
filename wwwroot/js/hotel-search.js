@@ -19,6 +19,32 @@
     }
 
     forms.forEach(form => {
+        const minPriceInput = form.querySelector('[name="MinPrice"]');
+        const maxPriceInput = form.querySelector('[name="MaxPrice"]');
+
+        function validatePriceRange() {
+            if (!minPriceInput || !maxPriceInput) {
+                return;
+            }
+
+            maxPriceInput.setCustomValidity("");
+
+            const minPrice = minPriceInput.valueAsNumber;
+            const maxPrice = maxPriceInput.valueAsNumber;
+
+            if (Number.isFinite(minPrice) &&
+                Number.isFinite(maxPrice) &&
+                minPrice > maxPrice) {
+                maxPriceInput.setCustomValidity(
+                    "Maksimum fiyat minimum fiyattan küçük olamaz."
+                );
+            }
+        }
+
+        minPriceInput?.addEventListener("input", validatePriceRange);
+        maxPriceInput?.addEventListener("input", validatePriceRange);
+
+        validatePriceRange();
         form.addEventListener("submit", event => {
             if (form.dataset.submitting === "true") {
                 event.preventDefault();

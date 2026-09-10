@@ -42,11 +42,24 @@ namespace Stayora.Models
                     "Çıkış tarihi giriş tarihinden sonra olmalı.",
                     [nameof(CheckOut)]);
             }
+            if (MinPrice.HasValue &&
+                    MaxPrice.HasValue &&
+                    MinPrice.Value > MaxPrice.Value)
+            {
+                yield return new ValidationResult(
+                    "Maksimum fiyat minimum fiyattan küçük olamaz.", [nameof(MaxPrice)]);
+            }
         }
         [RegularExpression("^(popularity|price|price_from_high_to_low|bayesian_review_score|distance|class_descending|class_ascending|upsort_bh)$", ErrorMessage = "Geçersiz sıralama seçimi.")]
         public string SortBy { get; set; } = "popularity";
 
         [RegularExpression("^class::[0-5]$", ErrorMessage = "Geçersiz yıldız filtresi.")]
         public string? CategoryFilter { get; set; }
+
+        [Range(typeof(decimal), "0", "100000000", ErrorMessage = "Minimum fiyat 0 ile 100.000.000 arasında olmalı.")]
+        public decimal? MinPrice { get; set; }
+
+        [Range(typeof(decimal), "0", "100000000", ErrorMessage = "Maksimum fiyat 0 ile 100.000.000 arasında olmalı.")]
+        public decimal? MaxPrice { get; set; }
     }
 }

@@ -56,6 +56,35 @@
                 }
             </select>
         </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="check-date">
+                    <label asp-for="MinPrice">Min. Fiyat (AED)</label>
+
+                    <input asp-for="MinPrice"
+                           type="number"
+                           asp-format="{0:0.##}"
+                           min="0"
+                           max="100000000"
+                           step="1"
+                           placeholder="Sınır yok">
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="check-date">
+                    <label asp-for="MaxPrice">Maks. Fiyat (AED)</label>
+
+                    <input asp-for="MaxPrice"
+                           type="number"
+                           asp-format="{0:0.##}"
+                           min="0"
+                           max="100000000"
+                           step="1"
+                           placeholder="Sınır yok">
+                </div>
+            </div>
+        </div>
         <div class="select-option">
             <label asp-for="CategoryFilter">Yıldız Sayısı</label>
 

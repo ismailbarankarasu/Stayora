@@ -42,6 +42,8 @@
                asp-route-PageNumber="@Model.Search.PageNumber"
                asp-route-SortBy="@Model.Search.SortBy"
                asp-route-CategoryFilter="@Model.Search.CategoryFilter"
+               asp-route-MinPrice="@(Model.Search.MinPrice?.ToString(CultureInfo.InvariantCulture))"
+               asp-route-MaxPrice="@(Model.Search.MaxPrice?.ToString(CultureInfo.InvariantCulture))"
                class="primary-btn">
                 Arama Sonuçlarına Dön
             </a>
