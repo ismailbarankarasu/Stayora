@@ -56,7 +56,43 @@
                 }
             </select>
         </div>
+        <div class="select-option">
+            <label asp-for="SortBy">Sıralama</label>
 
+            <select asp-for="SortBy">
+                <option value="popularity">
+                    Önerilenler
+                </option>
+
+                <option value="price">
+                    Fiyat: düşükten yükseğe
+                </option>
+
+                <option value="price_from_high_to_low">
+                    Fiyat: yüksekten düşüğe
+                </option>
+
+                <option value="bayesian_review_score">
+                    En iyi değerlendirilenler
+                </option>
+
+                <option value="distance">
+                    Merkeze uzaklık
+                </option>
+
+                <option value="class_descending">
+                    Yıldız: yüksekten düşüğe
+                </option>
+
+                <option value="class_ascending">
+                    Yıldız: düşükten yükseğe
+                </option>
+
+                <option value="upsort_bh">
+                    Önce evler ve daireler
+                </option>
+            </select>
+        </div>
         <button type="submit">
             <span data-search-button-text>Otelleri Ara</span>
             <i class="fa fa-spinner fa-spin ml-2"

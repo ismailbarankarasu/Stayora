@@ -109,6 +109,7 @@ namespace Stayora.Services
                     "Geçerli bir destinasyon seçilmelidir.",
                     nameof(destination));
             }
+
             const int apiPageSize = 20;
             const int displayPageSize = 4;
 
@@ -117,6 +118,7 @@ namespace Stayora.Services
 
             var apiPageNumber = firstItemIndex / apiPageSize + 1;
             var skipCount = (int)(firstItemIndex % apiPageSize);
+
             var parameters = new Dictionary<string, string?>
             {
                 ["dest_id"] = destination.DestinationId,
@@ -141,13 +143,13 @@ namespace Stayora.Services
 
                 ["languagecode"] = "en-us",
                 ["currency_code"] = "AED",
-                ["location"] = "US"
+                ["location"] = "US",
+                ["sort_by"] = request.SortBy
             };
 
             var url = QueryHelpers.AddQueryString(
                 "api/v1/hotels/searchHotels",
                 parameters);
-
             var cacheKey = $"booking:hotels:{url}";
 
             if (!_cache.TryGetValue(

@@ -43,5 +43,7 @@ namespace Stayora.Models
                     [nameof(CheckOut)]);
             }
         }
+        [RegularExpression("^(popularity|price|price_from_high_to_low|bayesian_review_score|distance|class_descending|class_ascending|upsort_bh)$", ErrorMessage = "Geçersiz sıralama seçimi.")]
+        public string SortBy { get; set; } = "popularity";
     }
 }
