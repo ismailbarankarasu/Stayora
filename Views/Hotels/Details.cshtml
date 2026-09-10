@@ -4,9 +4,24 @@
 
 @{
     ViewData["Title"] = Model.Hotel?.HotelName ?? "Otel Detayı";
-
-    var culture = CultureInfo.GetCultureInfo("tr-TR");
+    string? mapUrl = null;
     var hotel = Model.Hotel;
+if (hotel?.Latitude is double latitude &&
+    hotel.Longitude is double longitude &&
+    double.IsFinite(latitude) &&
+    double.IsFinite(longitude) &&
+    latitude >= -90 && latitude <= 90 &&
+    longitude >= -180 && longitude <= 180)
+{
+    var coordinates =
+        latitude.ToString(CultureInfo.InvariantCulture)
+        + ","
+        + longitude.ToString(CultureInfo.InvariantCulture);
+
+    mapUrl = "https://www.google.com/maps/search/?api=1&query="
+        + Uri.EscapeDataString(coordinates);
+}
+    var culture = CultureInfo.GetCultureInfo("tr-TR");
 
     var photos = hotel?.Rooms.Values
         .SelectMany(room => room.Photos)
@@ -72,6 +87,21 @@
                 <i class="icon_pin_alt" aria-hidden="true"></i>
                 @hotel.Address
             </p>
+@if (mapUrl is not null)
+{
+    <div class="mb-4">
+        <a href="@mapUrl"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="primary-btn">
+            <i class="fa fa-map-marker mr-1"
+               aria-hidden="true"></i>
+            Haritada Gör
+            <i class="fa fa-external-link ml-1"
+               aria-hidden="true"></i>
+        </a>
+    </div>
+}
 
             @if (hotel.ReviewCount.HasValue)
             {
